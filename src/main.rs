@@ -28,9 +28,7 @@ async fn main() {
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![
-                commands::about::about()
-            ],
+            commands: vec![commands::about::about()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
@@ -44,10 +42,7 @@ async fn main() {
     let token = std::env::var("token").unwrap();
     let intents = serenity::GatewayIntents::non_privileged();
 
-    let client = serenity::ClientBuilder::new(token, intents)
-        .framework(framework)
-        .await;
+    let client = serenity::ClientBuilder::new(token, intents).framework(framework).await;
 
-    client.unwrap().start().await.unwrap();    
+    client.unwrap().start().await.unwrap();
 }
-

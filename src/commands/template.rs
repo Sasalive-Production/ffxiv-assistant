@@ -6,4 +6,3 @@ pub async fn command_name(ctx: Context<'_>) -> Result<(), Exception> {
     // write your code here
     Ok(())
 }
-
