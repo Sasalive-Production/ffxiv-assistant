@@ -14,7 +14,7 @@ struct News {
 }
 
 #[poise::command(slash_command)]
-pub async fn maintenance(ctx: Context<'_>) -> Result<(), Exception> {
+pub async fn news(ctx: Context<'_>) -> Result<(), Exception> {
     let url = "https://lodestonenews.com/news/topics?locale=jp";
 
     let client = reqwest::Client::new();
@@ -24,7 +24,7 @@ pub async fn maintenance(ctx: Context<'_>) -> Result<(), Exception> {
         let news: Vec<News> = serde_json::from_str(&res.text().await?).unwrap();
         let embed = serenity::CreateEmbed::new()
             .author(CreateEmbedAuthor::new("FF14 Lodestone News").url(url))
-            .fields({ news.iter().map(|n| (n.title.clone(), format!("[{}]({})", n.description, n.url), true)) });
+            .fields(news.iter().map(|n| (n.title.clone(), format!("[{}]({})", n.description, n.url), true)));
 
         let msg = poise::CreateReply::default().embed(embed);
 
