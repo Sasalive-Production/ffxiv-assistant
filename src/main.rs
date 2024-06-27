@@ -28,12 +28,17 @@ async fn main() {
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![commands::about::about()],
+            commands: vec![
+                commands::about::about(),
+                commands::news::news()
+                ],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
+                poise::builtins::register_in_guild(ctx, &framework.options().commands, serenity::GuildId::new(1140679501852966994)).await?;
+                poise::builtins::register_in_guild(ctx, &framework.options().commands, serenity::GuildId::new(1169613731269984376)).await?;
                 Ok(Data {})
             })
         })
