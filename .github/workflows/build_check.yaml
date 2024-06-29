@@ -1,0 +1,36 @@
+name: build_check
+on:
+  push:
+    branches:
+      - master
+    pull_request:
+      branches:
+        - master
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+  
+  - name: Build test
+    run: cargo build --verbose
+  
+  - name: Check formatting
+    run: cargo fmt --all --check
