@@ -29,6 +29,7 @@ pub async fn news(ctx: Context<'_>) -> Result<(), Exception> {
         let msg = poise::CreateReply::default().embed(embed);
 
         ctx.send(msg).await?;
+        Ok(())
     } else {
         let embed = serenity::CreateEmbed::new()
             .author(CreateEmbedAuthor::new("FF14 Lodestone News").url(url))
@@ -36,7 +37,6 @@ pub async fn news(ctx: Context<'_>) -> Result<(), Exception> {
 
         let msg = poise::CreateReply::default().embed(embed.clone());
         ctx.send(msg).await?;
+        Ok(())
     }
-
-    Ok(())
 }
