@@ -20,6 +20,7 @@ pub struct Data {}
 
 #[tokio::main]
 async fn main() {
+    std::env::set_var("RUST_LOG", "notice");
     env_logger::init();
     dotenv().unwrap();
 
@@ -28,10 +29,7 @@ async fn main() {
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![
-                commands::about::about(),
-                commands::news::news()
-                ],
+            commands: vec![commands::about::about(), commands::news::news()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
