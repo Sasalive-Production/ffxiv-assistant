@@ -9,6 +9,7 @@ use poise::serenity_prelude as serenity;
 mod commands {
     pub mod about;
     pub mod news;
+    pub mod market;
 }
 
 mod utils;
@@ -29,7 +30,11 @@ async fn main() {
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![commands::about::about(), commands::news::news()],
+            commands: vec![
+                commands::about::about(),
+                commands::news::news(),
+                commands::market::market(),
+                ],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
