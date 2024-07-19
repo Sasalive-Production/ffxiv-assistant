@@ -12,7 +12,9 @@ mod commands {
     pub mod market;
 }
 
-mod utils;
+mod utils {
+    pub mod paginate;
+}
 
 type Exception = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Exception>;
