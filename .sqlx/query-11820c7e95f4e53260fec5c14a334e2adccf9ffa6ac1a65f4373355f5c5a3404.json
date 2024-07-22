@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT * FROM items WHERE ja = $1 OR id = $1",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "en",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "de",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "ja",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "fr",
+        "ordinal": 4,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "11820c7e95f4e53260fec5c14a334e2adccf9ffa6ac1a65f4373355f5c5a3404"
+}
