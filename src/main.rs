@@ -10,6 +10,7 @@ mod commands {
     pub mod about;
     pub mod news;
     pub mod market;
+    pub mod weather;
 }
 
 mod utils {
@@ -35,6 +36,7 @@ async fn main() {
             commands: vec![
                 commands::about::about(),
                 commands::news::news(),
+                // commands::weather::weather()
                 commands::market::market(),
                 ],
             ..Default::default()
