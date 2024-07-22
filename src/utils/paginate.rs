@@ -2,6 +2,7 @@ use poise::serenity_prelude as serenity;
 use poise::Context;
 use ::serenity::all::CreateEmbed;
 
+#[allow(dead_code)]
 pub async fn paginate<U, E>(ctx: Context<'_, U, E>, pages: &[CreateEmbed]) -> Result<(), serenity::Error> {
     let ctx_id = ctx.id();
     let first_button_id = format!("{}first", ctx_id);
