@@ -1,10 +1,11 @@
 extern crate env_logger as logger;
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use dotenvy::dotenv;
 use env_logger;
 use poise::serenity_prelude as serenity;
+use ::serenity::all::Color;
 
 mod commands {
     pub mod about;
@@ -21,9 +22,15 @@ mod utils {
 type Exception = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Exception>;
 
+#[allow(dead_code)]
 pub struct Data {
     // loaded_data: Vec<market::Item>,
     db: sqlx::SqlitePool,
+    servers: HashMap<String, Vec<String>>,
+    color_error: Color,
+    color_success: Color,
+    color_info: Color,
+    color_warn: Color,
 }
 
 #[tokio::main]
@@ -67,9 +74,16 @@ async fn main() {
                 poise::builtins::register_in_guild(ctx, &framework.options().commands, serenity::GuildId::new(1169613731269984376)).await?; // sasagusa folder
 
                 let conn = sqlx::sqlite::SqlitePool::connect("sqlite://sqlite.db").await.unwrap();
+                let client = reqwest::Client::new();
+                let servers = client.get("https://xivapi.com/servers/dc").send().await.unwrap().json().await.unwrap();
                 Ok(Data {
                     // loaded_data: load_items("src/resources/items.json"),
                     db: conn,
+                    servers: servers,
+                    color_error: Color::from_rgb(245, 66, 66),
+                    color_success: Color::from_rgb(66, 245, 114),
+                    color_info: Color::from_rgb(66, 117, 245),
+                    color_warn: Color::from_rgb(245, 233, 66),
                 })
             })
         })
