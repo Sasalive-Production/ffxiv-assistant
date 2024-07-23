@@ -16,3 +16,10 @@ pub fn load_items(path: &str) -> Vec<Item> {
 
     return json
 }
+
+
+#[derive(sqlx::FromRow)]
+pub struct WishList {
+    pub item_id: u32,
+    pub user_id: i64,
+}
