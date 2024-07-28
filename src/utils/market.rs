@@ -19,7 +19,9 @@ pub fn load_items(path: &str) -> Vec<Item> {
 
 
 #[derive(sqlx::FromRow)]
+#[allow(dead_code)]
 pub struct WishList {
     pub item_id: u32,
     pub user_id: i64,
+    pub price_per_unit: u32,
 }
