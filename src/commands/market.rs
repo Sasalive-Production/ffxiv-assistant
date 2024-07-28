@@ -61,7 +61,6 @@ struct Materia {
 #[derive(Deserialize)]
 #[allow(non_snake_case)]
 struct ItemAPIResponse {
-    Icon: String,
     IconHD: String,
 }
 
@@ -160,7 +159,7 @@ pub async fn market(
                 "maxPrice",
             ];
 
-            let query = [("listings", "8"), ("fields", &query_fields.join(","))];
+            let query = [("fields", &query_fields.join(","))];
             let response_status = client.get(base_url).query(&query).send().await.unwrap();
             if !(response_status.status().is_success()) {
                 let reply = {
@@ -179,7 +178,7 @@ pub async fn market(
             let add_wishlist_id = format!("{}-add-wishlist", context_id);
 
             let item_info_url = format!("https://xivapi.com/Item/{}", item.id);
-            let item_info_query = [("snake_case", "1"), ("columns", "Icon,IconHD")];
+            let item_info_query = [("columns", "Icon,IconHD")];
             let item_info: ItemAPIResponse = client.get(item_info_url).query(&item_info_query).send().await.unwrap().json().await.unwrap();
 
             let reply = {
@@ -187,14 +186,19 @@ pub async fn market(
                     .author(CreateEmbedAuthor::new("Market Information"))
                     .description(format!("**{}**のマーケット情報を表示しています。", item.ja,))
                     .color(ctx.data().color_info)
-                    .thumbnail(item_info.IconHD);
+                    .thumbnail(format!("https://xivapi.com{}", item_info.IconHD));
 
                 let mut fields: Vec<(String, String, bool)> = vec![];
                 let worlds = ctx.data().servers.get(&region).unwrap();
 
-                for sale in response.listings {
+                let mut counter = 0;
+                for sale in &response.listings {
+                    counter += 1;
+                    if counter >=25 {
+                        break;
+                    }
                     if let Some(world_name) = &sale.worldName {
-                        if worlds.contains(&world_name) {
+                        if !(worlds.contains(&world_name)) {
                             continue;
                         } else {
                             fields.push((
@@ -228,7 +232,7 @@ pub async fn market(
                         .fetch_one(&ctx.data().db)
                         .await;
 
-                    // Errが返ってきた時に追加するの、気持ち悪いね。
+                    // Errが返ってきた時に追加するの気持ち悪いね
                     match already_added {
                         Ok(_) => {
                             let reply = {
@@ -242,9 +246,10 @@ pub async fn market(
                         }
 
                         Err(_) => {
-                            sqlx::query(r#"INSERT INTO wishlist (item_id, user_id) VALUES ($1, $2, $3)"#)
+                            sqlx::query(r#"INSERT INTO wishlist (item_id, user_id, price_per_unit) VALUES ($1, $2, $3)"#)
                                 .bind(item.id)
                                 .bind(i64::from(ctx.author().id))
+                                .bind(response.listings.first().unwrap().pricePerUnit)
                                 .execute(&ctx.data().db)
                                 .await
                                 .unwrap();
